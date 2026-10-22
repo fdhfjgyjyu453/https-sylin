@@ -1,18 +1,777 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="uk">
 <head>
-    <meta charset="UTF-8">
-    <title>Завдання 1</title>
-    <style>
-        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background: #eef2f5; margin: 0; }
-        .card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: center; }
-        h1 { color: #2ea44f; margin-bottom: 10px; }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Менталіст</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root {
+  --bg: #e8edec;
+  --surface: #f4f7f6;
+  --surface-hover: #ffffff;
+  --fg: #112628;
+  --muted: #44595c;
+  --line: #b9c6c5;
+  --accent: #9a5a0c;
+  --accent-soft: #ebdcc3;
+  --alert: #a63a2f;
+  --fbi: #1f4f86;
+  --font-display: "Playfair Display", "Times New Roman", serif;
+  --font-body: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+  --font-mono: "IBM Plex Mono", monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1b1d;
+    --surface: #152629;
+    --surface-hover: #1c3236;
+    --fg: #e6ecea;
+    --muted: #9bb0ae;
+    --line: #2b4245;
+    --accent: #e0a43c;
+    --accent-soft: #3a2f17;
+    --alert: #e0705f;
+    --fbi: #86b6ee;
+    color-scheme: dark;
+  }
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: 18px; /* Збільшений базовий шрифт */
+  line-height: 1.65;
+  padding-left: max(20px, env(safe-area-inset-left, 0px));
+  padding-right: max(20px, env(safe-area-inset-right, 0px));
+  padding-block: 0;
+  margin: 0;
+}
+.wrap { max-width: 1100px; margin: 0 auto; }
+h1, h2, h3 { font-family: var(--font-display); font-weight: 700; text-wrap: balance; margin: 0; }
+p { margin: 0; }
+a { color: var(--accent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+.label {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* Верхня стрічка */
+.bar {
+  display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: space-between;
+  padding-block: 20px; border-bottom: 1px solid var(--line);
+}
+.bar b { color: var(--alert); font-weight: 600; }
+
+/* Hero */
+.hero {
+  display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: 40px 56px; padding-block: 60px 70px; align-items: start;
+}
+.hero h1 {
+  font-size: clamp(3.4rem, 11vw, 6.8rem);
+  line-height: 1.0; letter-spacing: -0.01em;
+}
+.hero .lead {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3.2vw, 2.1rem); line-height: 1.35;
+  margin-top: 26px; max-width: 28ch; color: var(--accent);
+}
+.hero .intro { margin-top: 22px; max-width: 58ch; color: var(--muted); font-size: 1.05rem; }
+
+.dossier {
+  background: var(--surface); border: 1px solid var(--line);
+  padding: 26px 26px 14px; min-width: 0;
+}
+.dossier dl { margin: 16px 0 0; }
+.dossier .row {
+  display: grid; grid-template-columns: 9.5em minmax(0, 1fr); gap: 14px;
+  padding-block: 12px; border-top: 1px dashed var(--line);
+}
+.dossier dt { font-family: var(--font-mono); font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); padding-top: 3px; }
+.dossier dd { margin: 0; font-weight: 500; }
+
+/* Секції */
+section { padding-block: 60px; border-top: 1px solid var(--line); }
+.sec-head { display: flex; flex-wrap: wrap; gap: 8px 32px; align-items: baseline; justify-content: space-between; margin-bottom: 36px; }
+.sec-head h2 { font-size: clamp(2.1rem, 5vw, 3.2rem); line-height: 1.1; }
+.sec-head p { max-width: 48ch; color: var(--muted); font-size: 1.05rem; }
+
+/* ОНОВЛЕНА КОМАНДА ЛІСБОН */
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+  gap: 20px;
+}
+.person-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: transform 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+}
+.person-card:hover {
+  transform: translateY(-4px);
+  background: var(--surface-hover);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.06);
+}
+.person-card.lead-card {
+  border-left: 5px solid var(--accent);
+  background: var(--accent-soft);
+}
+.card-tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: rgba(154, 90, 12, 0.12);
+  padding: 4px 10px;
+  border-radius: 4px;
+  width: fit-content;
+  margin-bottom: 12px;
+}
+.person-card h3 {
+  font-size: 1.85rem;
+  line-height: 1.15;
+}
+.person-card .actor {
+  color: var(--muted);
+  font-size: 15px;
+  font-family: var(--font-mono);
+  margin-top: 4px;
+}
+.person-card .spec {
+  margin-top: 14px;
+  font-size: 14px;
+  color: var(--muted);
+  border-top: 1px dashed var(--line);
+  padding-top: 10px;
+}
+.person-card .spec b { color: var(--fg); font-weight: 600; }
+.person-card p.about {
+  margin-top: 12px;
+  font-size: 1.02rem;
+  color: var(--fg);
+}
+
+/* Методи */
+.methods { display: grid; gap: 14px; }
+details { border: 1px solid var(--line); background: var(--surface); }
+summary {
+  list-style: none; cursor: pointer; padding: 20px 24px;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  font-family: var(--font-display); font-size: 1.6rem;
+}
+summary::-webkit-details-marker { display: none; }
+summary::after { content: "+"; font-family: var(--font-mono); font-size: 1.6rem; color: var(--accent); flex: none; }
+details[open] summary::after { content: "–"; }
+details .body { padding: 0 24px 24px; max-width: 72ch; color: var(--muted); font-size: 1.05rem; }
+details .body strong { color: var(--fg); font-weight: 600; }
+
+/* Лінія Червоного Джона */
+.arc { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 32px 56px; }
+.arc blockquote { margin: 0; font-family: var(--font-display); font-size: clamp(1.6rem, 3.4vw, 2.3rem); line-height: 1.25; border-left: 4px solid var(--alert); padding-left: 22px; }
+.arc .text { color: var(--muted); display: grid; gap: 14px; font-size: 1.05rem; }
+.note { font-family: var(--font-mono); font-size: 13px; letter-spacing: 0.06em; color: var(--muted); border: 1px dashed var(--line); padding: 12px 14px; }
+
+/* ОБЕРТОВА ЧАШКА ЧАЮ */
+.tea { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 32px 56px; align-items: center; }
+.cup { display: grid; place-items: center; background: var(--surface); border: 1px solid var(--line); padding: 40px; overflow: hidden; }
+
+/* Анімація постійного обертання чашки */
+.cup svg {
+  width: min(100%, 250px);
+  height: auto;
+  display: block;
+  animation: rotateCup 14s linear infinite;
+  transform-origin: center center;
+}
+.running .cup svg {
+  animation-duration: 5s; /* Швидше обертання під час заварювання */
+}
+@keyframes rotateCup {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.cup .steam { stroke: var(--muted); fill: none; stroke-width: 3; stroke-linecap: round; opacity: 0.7; }
+.running .steam { animation: steam 2.8s ease-in-out infinite; }
+.running .steam.s2 { animation-delay: 0.9s; }
+.running .steam.s3 { animation-delay: 1.8s; }
+@keyframes steam { 0% { transform: translateY(6px); opacity: 0; } 40% { opacity: 0.8; } 100% { transform: translateY(-10px); opacity: 0; } }
+.clock { font-family: var(--font-mono); font-size: clamp(3.2rem, 12vw, 5.8rem); font-weight: 500; font-variant-numeric: tabular-nums; line-height: 1; margin-block: 10px 20px; }
+.status { min-height: 1.6em; color: var(--muted); margin-bottom: 20px; }
+.controls { display: flex; flex-wrap: wrap; gap: 10px; }
+button {
+  font: inherit; font-size: 16px; font-weight: 500; cursor: pointer; color: var(--fg);
+  background: transparent; border: 1px solid var(--line); padding: 10px 18px; min-height: 46px;
+}
+button:hover { border-color: var(--accent); }
+button.primary { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+button[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
+
+/* Архів справ */
+.filters { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; margin-bottom: 24px; }
+.search { flex: 1 1 250px; min-width: 0; font: inherit; font-size: 16px; color: var(--fg); background: var(--surface); border: 1px solid var(--line); padding: 12px 16px; min-height: 46px; }
+.search::placeholder { color: var(--muted); }
+.seasons { display: flex; flex-wrap: wrap; gap: 8px; }
+.count { margin-bottom: 16px; }
+.cases { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 310px), 1fr)); gap: 18px; }
+.doc { background: var(--surface); border: 1px solid var(--line); display: flex; flex-direction: column; min-width: 0; }
+.doc.cbi { border-top: 4px solid var(--accent); }
+.doc.fbi { border-top: 4px solid var(--fbi); }
+.doc-head { display: flex; justify-content: space-between; gap: 12px; padding: 12px 16px; border-bottom: 1px dashed var(--line); font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+.doc.cbi .agency { color: var(--accent); font-weight: 600; }
+.doc.fbi .agency { color: var(--fbi); font-weight: 600; }
+.doc-body { padding: 16px; display: flex; flex-direction: column; gap: 12px; flex: 1; }
+.doc h3 { font-size: 1.6rem; line-height: 1.2; }
+.fields { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 14px; margin: 0; font-size: 14px; }
+.fields dt { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); padding-top: 2px; }
+.fields dd { margin: 0; }
+.doc .desc { font-size: 16px; }
+.doc-foot { padding: 0 16px 18px; display: flex; }
+.stamp { display: inline-block; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; border: 2px solid currentColor; padding: 4px 12px; transform: rotate(-3deg); font-weight: 600; }
+.stamp.solved { color: var(--accent); }
+.doc.fbi .stamp.solved { color: var(--fbi); }
+.stamp.arc { color: var(--alert); }
+.stamp.part { color: var(--muted); }
+.empty { color: var(--muted); padding-block: 24px; }
+
+/* ФУТЕР БЕЗ РОЗДІЛЕННЯ ЛІНІЄЮ */
+footer {
+  padding-block: 36px 50px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 15px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px 32px;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.footer-text {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.author-credit {
+  font-size: 18px;
+  color: var(--fg);
+  font-weight: 500;
+}
+.author-credit strong {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--fg);
+}
+
+@media (max-width: 760px) {
+  .hero, .arc, .tea { grid-template-columns: minmax(0, 1fr); }
+  .hero { padding-block: 40px 50px; }
+  .dossier .row { grid-template-columns: 1fr; gap: 4px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cup svg { animation: none; }
+  .running .steam { animation: none; opacity: 0.6; }
+}
+</style>
 </head>
 <body>
-    <div class="card">
-        <h1>Завдання 1 виконано!</h1>
-        <p>Ця публічна сторінка працює через захищений протокол <b>HTTPS</b>.</p>
+<div class="wrap">
+  <header class="bar label">
+    <span>CBI · Сакраменто, Каліфорнія</span>
+    <span>Справа відкрита · <b>Червоний Джон</b></span>
+  </header>
+
+  <main>
+    <div class="hero">
+      <div>
+        <p class="label">Детективний серіал · CBS</p>
+        <h1>Менталіст</h1>
+        <p class="lead">Він бачить, що ви приховуєте, ще до того, як ви сіли.</p>
+        <p class="intro">Патрік Джейн колись вдавав екстрасенса на телебаченні. Тепер він працює незалежним консультантом Каліфорнійського бюро розслідувань і розкриває заплутані злочини за ледь помітними мікрожестами, паузами й поглядами підозрюваних.</p>
+      </div>
+
+      <aside class="dossier" aria-label="Досьє серіалу">
+        <p class="label">Офіційне досьє</p>
+        <dl>
+          <div class="row"><dt>Автор</dt><dd>Бруно Геллер</dd></div>
+          <div class="row"><dt>Канал</dt><dd>CBS, США</dd></div>
+          <div class="row"><dt>Прем'єра</dt><dd>23 вересня 2008</dd></div>
+          <div class="row"><dt>Фінал</dt><dd>18 лютого 2015</dd></div>
+          <div class="row"><dt>Сезонів</dt><dd>7</dd></div>
+          <div class="row"><dt>Серій</dt><dd>151</dd></div>
+          <div class="row"><dt>Жанр</dt><dd>Детектив, драма, психологія</dd></div>
+        </dl>
+      </aside>
     </div>
+
+    <!-- ОНОВЛЕНИЙ РОЗДІЛ КОМАНДИ -->
+    <section id="team">
+      <div class="sec-head">
+        <h2>Команда Лісбон</h2>
+        <p>Оперативний відділ розслідування тяжких злочинів CBI. Люди, які перетворюють інтуїтивні провокації Джейна на законні арешти.</p>
+      </div>
+
+      <div class="team-grid">
+        <article class="person-card lead-card">
+          <span class="card-tag">Особливий статус</span>
+          <h3>Патрік Джейн</h3>
+          <p class="actor">Саймон Бейкер · Консультант</p>
+          <div class="spec"><b>Спеціалізація:</b> Холодне читання, гіпноз, маніпуляція</div>
+          <p class="about">Колишній фальшивий медіум. Не носить зброї, ігнорує статут, п'є чай на місцях злочинів і невпинно йде слідом свого минулого.</p>
+        </article>
+
+        <article class="person-card">
+          <span class="card-tag">Керівник відділу</span>
+          <h3>Тереза Лісбон</h3>
+          <p class="actor">Робін Танні · Старша агентка</p>
+          <div class="spec"><b>Спеціалізація:</b> Тактика, допити, субординація</div>
+          <p class="about">Залізний моральний компас відділу. Бере удар перед керівництвом за витівки Джейна і прикриває його спину під час рейдів.</p>
+        </article>
+
+        <article class="person-card">
+          <span class="card-tag">Оперативна група</span>
+          <h3>Кімбол Чо</h3>
+          <p class="actor">Тім Кан · Спеціальний агент</p>
+          <div class="spec"><b>Спеціалізація:</b> Польова робота, жорсткий допит</div>
+          <p class="about">Найхолоднокровніший агент CBI. Незворушний вираз обличчя, абсолютна чесність і фірмовий саркастичний гумор.</p>
+        </article>
+
+        <article class="person-card">
+          <span class="card-tag">Оперативна група</span>
+          <h3>Вейн Рігсбі</h3>
+          <p class="actor">Овен Йомен · Спеціальний агент</p>
+          <div class="spec"><b>Спеціалізація:</b> Балістика, підпали, штурм</div>
+          <p class="about">Фізична міць команди та експерт із підпалів. Відданий товариш, який постійно стає об'єктом добродушних кепкувань Джейна.</p>
+        </article>
+
+        <article class="person-card">
+          <span class="card-tag">Аналітика та зв'язок</span>
+          <h3>Грейс Ван Пелт</h3>
+          <p class="actor">Аманда Рігетті · Спеціальна агентка</p>
+          <div class="spec"><b>Спеціалізація:</b> Цифрові бази, OSINT, докази</div>
+          <p class="about">Спеціалістка з цифрового сліду та інформаційних систем. Вірить у паранормальне глибше за інших, через що нерідко сперечається з Джейном.</p>
+        </article>
+      </div>
+      <p class="note" style="margin-top:20px">З часом склад підрозділу зазнає змін, а після подій шостого сезону робота переходить у юрисдикцію ФБР.</p>
+    </section>
+
+    <section id="methods">
+      <div class="sec-head">
+        <h2>Методи Джейна</h2>
+        <p>Натисніть на пункт, щоб розкрити прийом спостереження.</p>
+      </div>
+      <div class="methods">
+        <details open>
+          <summary>Холодне читання</summary>
+          <div class="body"><p>Співрозмовнику кажуть загальні речі, які підходять майже всім, і уважно стежать за реакцією зіниць, дихання та плечей. <strong>У серіалі це основа старого трюку Джейна з часів «ясновидця».</strong></p></div>
+        </details>
+        <details>
+          <summary>Спостережливість до дрібниць</summary>
+          <div class="body"><p>Слід від знятої обручки, потерті манжети, пил на підошвах лівого черевика. Дрібниці складаються у мотив ще до першого запитання.</p></div>
+        </details>
+        <details>
+          <summary>Гіпнотичний транс</summary>
+          <div class="body"><p>Швидке введення свідків у розслаблений стан для пошуку заблокованих спогадів. <strong>Художній прийом, який у серіалі працює майже безвідмовно.</strong></p></div>
+        </details>
+        <details>
+          <summary>Палац пам'яті</summary>
+          <div class="body"><p>Мнемонічна техніка: спогади розкладаються по полицях і кімнатах вигаданого будинку. Допомагає тримати в голові сотні облич і фактів.</p></div>
+        </details>
+      </div>
+    </section>
+
+    <section id="arc">
+      <div class="sec-head">
+        <h2>Одна справа на всі сезони</h2>
+      </div>
+      <div class="arc">
+        <blockquote>Кожна серія розкриває окремий злочин, а над ними висить одна велика незакрита справа.</blockquote>
+        <div class="text">
+          <p>Серійний убивця Червоний Джон колись забрав родину Патріка. Фальшива кар'єра медіума обірвалася в один день, після чого Джейн підписав угоду з бюро заради помсти.</p>
+          <p>Серіал поєднує класичні процедурні розслідування з психологічною дуеллю двох геніїв.</p>
+          <p class="note">Тут відсутні будь-які критичні сюжетні спойлери.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="cases-section">
+      <div class="sec-head">
+        <h2>Архів справ</h2>
+        <p>Повне досьє на кожну зі 151 серії телесеріалу. Бланки CBI діють до шостого сезону, далі справи ведуться під знаком ФБР.</p>
+      </div>
+      <div class="filters">
+        <input id="q" class="search" type="search" placeholder="Пошук за назвою або ключовим словом" aria-label="Пошук справи" autocomplete="off">
+        <div class="seasons" id="seasonChips" role="group" aria-label="Сезон"></div>
+      </div>
+      <p class="label count" id="count" aria-live="polite"></p>
+      <div class="cases" id="cases"></div>
+    </section>
+
+    <!-- СЕКЦІЯ З ОБЕРТОВОЮ ЧАШКОЮ -->
+    <section id="tea">
+      <div class="sec-head">
+        <h2>Час на чай</h2>
+        <p>Джейн не починає думати без свіжого чаю. Оберіть свій сорт і запустіть таймер.</p>
+      </div>
+      <div class="tea" id="teaBlock">
+        <div class="cup">
+          <svg viewBox="0 0 260 220" role="img" aria-label="Чашка чаю, що обертається">
+            <path class="steam s1" d="M90 70 C80 55 100 45 90 28"/>
+            <path class="steam s2" d="M130 72 C120 55 140 45 130 24"/>
+            <path class="steam s3" d="M170 70 C160 55 180 45 170 28"/>
+            <path d="M52 96 H208 V132 C208 166 182 190 130 190 C78 190 52 166 52 132 Z" fill="var(--accent-soft)" stroke="var(--fg)" stroke-width="3"/>
+            <path d="M208 108 H224 C240 108 240 146 218 146 H206" fill="none" stroke="var(--fg)" stroke-width="3"/>
+            <ellipse cx="130" cy="96" rx="78" ry="8" fill="var(--accent)" stroke="var(--fg)" stroke-width="3"/>
+            <path d="M70 204 H190" stroke="var(--fg)" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div>
+          <p class="label">Таймер заварювання</p>
+          <div class="clock" id="clock" role="timer" aria-live="off">03:00</div>
+          <p class="status" id="status" aria-live="polite">Оберіть час і натисніть «Заварити».</p>
+          <div class="controls" id="presets" role="group" aria-label="Час заварювання">
+            <button type="button" data-sec="120" aria-pressed="false">2 хв · зелений</button>
+            <button type="button" data-sec="180" aria-pressed="true">3 хв · чорний</button>
+            <button type="button" data-sec="300" aria-pressed="false">5 хв · трав'яний</button>
+          </div>
+          <div class="controls" style="margin-top:16px">
+            <button type="button" class="primary" id="start">Заварити</button>
+            <button type="button" id="reset">Скинути</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ФУТЕР ІЗ ПІДПИСОМ БЕЗ РОЗДІЛЕННЯ ЛІНІЄЮ -->
+  <footer>
+    <div class="footer-text">
+      <span>Неофіційна сторінка від глядача. Усі права на серіал належать його власникам.</span>
+      <span class="author-credit">Сторінку створив: <strong>Силін Максим Максимович</strong></span>
+    </div>
+    <span class="label">Менталіст · 2008–2015</span>
+  </footer>
+</div>
+
+<script>
+(function () {
+  var clock = document.getElementById("clock");
+  var status = document.getElementById("status");
+  var block = document.getElementById("teaBlock");
+  var startBtn = document.getElementById("start");
+  var resetBtn = document.getElementById("reset");
+  var presets = document.querySelectorAll("#presets button");
+  var total = 180, left = 180, timer = null, endAt = 0;
+
+  function fmt(s) {
+    var m = Math.floor(s / 60), r = s % 60;
+    return (m < 10 ? "0" : "") + m + ":" + (r < 10 ? "0" : "") + r;
+  }
+  function render() { clock.textContent = fmt(left); }
+  function stop() {
+    if (timer) { clearInterval(timer); timer = null; }
+    block.classList.remove("running");
+  }
+  function tick() {
+    left = Math.max(0, Math.round((endAt - Date.now()) / 1000));
+    render();
+    if (left === 0) {
+      stop();
+      startBtn.textContent = "Заварити ще";
+      status.textContent = "Готово. Чай можна пити.";
+    }
+  }
+  function start() {
+    if (timer) {
+      stop();
+      startBtn.textContent = "Продовжити";
+      status.textContent = "Пауза.";
+      return;
+    }
+    if (left === 0) left = total;
+    endAt = Date.now() + left * 1000;
+    block.classList.add("running");
+    startBtn.textContent = "Пауза";
+    status.textContent = "Настоюється. Не поспішайте.";
+    timer = setInterval(tick, 250);
+  }
+  function reset() {
+    stop();
+    left = total;
+    render();
+    startBtn.textContent = "Заварити";
+    status.textContent = "Оберіть час і натисніть «Заварити».";
+  }
+
+  startBtn.addEventListener("click", start);
+  resetBtn.addEventListener("click", reset);
+  presets.forEach(function (b) {
+    b.addEventListener("click", function () {
+      presets.forEach(function (x) { x.setAttribute("aria-pressed", "false"); });
+      b.setAttribute("aria-pressed", "true");
+      total = parseInt(b.getAttribute("data-sec"), 10);
+      reset();
+    });
+  });
+  render();
+})();
+</script>
+
+<script>
+(function () {
+  var DATA = {
+    1: [
+      ["Pilot","2008-09-23","Перша справа Джейна в бюро: вбивство дівчини. Він викриває винного на допиті й оголошує, що шукатиме Червоного Джона.","s"],
+      ["Red Hair and Silver Tape","2008-09-30","Убита офіціантка веде команду до чоловіка, який викрадає рудоволосих жінок. Пастка Джейна йде не за планом.","s"],
+      ["Red Tide","2008-10-14","На узбережжі знаходять тіло школярки. Джейн влаштовує пастку й стравлює між собою друзів-серферів.","s"],
+      ["Ladies in Red","2008-10-21","Убитий інвестиційний банкір вів подвійне життя. Слід веде до зниклих грошей і викрадення заради викупу.","s"],
+      ["Redwood","2008-10-28","Закривавлена машина веде до зниклих подруг. Підозрювана нічого не пам'ятає, і Джейн допомагає їй відновити ту ніч.","s"],
+      ["Red Handed","2008-11-11","Руку керівника казино знаходять на межі Каліфорнії та Невади. Джейн грає на залежності зятя від азартних ігор.","s"],
+      ["Seeing Red","2008-11-18","Спадкоємиця гине в аварії одразу після пророцтва ясновидиці. Джейн влаштовує спіритичний сеанс, щоб викрити вбивцю.","s"],
+      ["The Thin Red Line","2008-11-25","У мотелі застрелено свідка в справі про наркотики разом із подругою. Команда ставить фальшиву засідку.","s"],
+      ["Flame Red","2008-12-02","Підпал забирає життя ветерана Національної гвардії. Слід веде до прихованого джерела води в посушливому містечку.","s"],
+      ["Red Brick and Ivy","2008-12-16","Отруєно університетського дослідника. Джейн виявляє, що дороге дослідження його колишньої психіатрки було шахрайством.","s"],
+      ["Red John's Friends","2009-01-06","В'язень пропонує інформацію про Червоного Джона в обмін на допомогу з виправданням, і Джейн береться за справу.","a"],
+      ["Red Rum","2009-01-13","Зірку шкільного футболу знаходять мертвою біля окультного знака. Розслідування відкриває історію насильства в родині.","s"],
+      ["Paint it Red","2009-01-18","Викрадено картину за 50 мільйонів доларів. Поруч знаходять мертвого чоловіка, а підозрюваних чимало.","s"],
+      ["Crimson Casanova","2009-02-10","Жінку застрелено після зустрічі з майстром спокушання. Чо йде під прикриттям, щоб упіймати вбивцю.","s"],
+      ["Scarlett Fever","2009-02-17","Отруєно очільницю заміського клубу. Слід веде до прикриття, за яким продавали пігулки та знеболювальні.","s"],
+      ["Bloodshot","2009-03-17","Після погрози вибухом гине біржовий брокер. Вибух осліплює Джейна, але він лишається у справі.","s"],
+      ["Carnelian Inc.","2009-03-24","Анонімна погроза компанії переростає в серію вбивств на корпоративному виїзді.","s"],
+      ["Russet Potatoes","2009-03-31","Чоловік приносить поліції тіло, яке прийняв за мішок картоплі. Команда шукає вбивцю, що користується гіпнозом.","s"],
+      ["A Dozen Red Roses","2009-04-07","Команда їде до Голлівуду розслідувати вбивство кінопродюсера.","s"],
+      ["Red Sauce","2009-04-28","Застрелено колишнього інформатора мафії, що жив під захистом свідків. Джейн підступається до справи через гру в гольф із босом.","s"],
+      ["Miss Red","2009-05-05","Засновника софтверної компанії знаходять прив'язаним до якоря яхти. Його дівчина виявляється аферисткою.","s"],
+      ["Blood Brothers","2009-05-12","Гине підліток у таборі для складних школярів. Джейн інсценує ритуал і розкриває таємну групу.","s"],
+      ["Red John's Footsteps","2009-05-19","Знайдено мертву дівчину, її сестра зникла. Справа виводить команду на ферму й напружене протистояння.","a"]
+    ],
+    2: [
+      ["Redemption","2009-09-24","Задушено жінку, звинувачену в крадіжці мільйона. Команда придивляється до несподіваного достатку її родини.","s"],
+      ["The Scarlet Letter","2009-10-01","Вбито помічницю сенатора. Версії крутяться навколо чуток про роман.","s"],
+      ["Red Badge","2009-10-08","Знайдено мертвим злочинця з минулого Лісбон. Джейн показує, що її намагалися підставити.","s"],
+      ["Red Menace","2009-10-15","Адвоката мотоклубу вбито на узбіччі. Підозрюваних багато: ватажок, ревнива подруга та інші.","s"],
+      ["Red Scare","2009-10-29","У «будинку з привидами» гине чоловік. Джейн показує, що привид був вбудованою ілюзією, і ловить племінника.","s"],
+      ["Black Gold and Red Blood","2009-11-05","Вбивство молодого чоловіка пов'язане зі суперечкою про буріння нафти й охоронюваний вид.","s"],
+      ["Red Bulls","2009-11-12","Викрадено сестру багатої жінки. Об'єднані команди знаходять спільницю всередині: няню.","s"],
+      ["His Red Right Hand","2009-11-19","Напад на команду Боско виводить слід на головного ворога Джейна.","a"],
+      ["A Price Above Rubies","2009-12-10","Ювеліра застрелено під час пограбування. Джейн ловить винного через інсценоване викрадення.","s"],
+      ["Throwing Fire","2009-12-17","Колишнього бейсболіста знаходять мертвим у дзен-саду. Вбивця: батько гравця, що таємно переплачував тренеру.","s"],
+      ["Rose-Colored Glasses","2010-01-14","Подружжя вбито по дорозі на зустріч випускників. Слід веде до жінки, що влаштувала жорстокий розіграш і ховала шантаж.","s"],
+      ["Bleeding Heart","2010-01-21","Помічника мера знаходять у викопаній могилі. Вбивцею виявляється репортер, що нібито допомагав команді.","s"],
+      ["Redline","2010-02-04","Продавчиню знаходять у багажнику Bentley. Справа відкриває жорстку конкуренцію в автосалоні.","s"],
+      ["Blood In, Blood Out","2010-02-11","Чо неофіційно розслідує вбивство свого друга з минулого в банді.","s"],
+      ["Red Herring","2010-03-04","На кулінарному конкурсі в долині Напа отруєно зарозумілого шефа.","s"],
+      ["Code Red","2010-03-11","Дослідниця біозброї заражається небезпечним вірусом. Джейн інсценує крадіжку флакона й викриває колегу.","s"],
+      ["The Red Box","2010-04-01","Вбито репетитора. Загадкова червона скринька веде до перстеня, викраденого з Британського музею.","s"],
+      ["Aingavite Baa (Red Water)","2010-04-08","Жінка без пам'яті приводить команду до трьох тіл у коморі. Слід тягнеться до індіанської резервації.","s"],
+      ["Blood Money","2010-04-22","Вбито прокурора. Після викриття кілера Джейн доводить, що замовником був колега-суперник.","s"],
+      ["Red All Over","2010-04-29","Убивство медіамагната веде розслідування до секти самовдосконалення.","s"],
+      ["18-5-4","2010-05-06","Чоловіка вбиває клоун, що забирає палець. Слід приводить до сейфа й пристрою для злому шифрування.","s"],
+      ["Red Letter","2010-05-13","Убито очільницю благодійності проти торгівлі людьми. Джейн знову зустрічає ясновидицю Крістіну Фрай.","s"],
+      ["Red Sky in the Morning","2010-05-20","Фінал сезону: наслідувач відтворює почерк головного ворога Джейна, і справа зачіпає його особисто.","a"]
+    ],
+    3: [
+      ["Red Sky at Night","2010-09-23","Команда розслідує викрадення лобіста та вбивство його водія, а Джейн вирішує, чи лишатися в бюро.","s"],
+      ["Cackle-Bladder Blood","2010-09-30","Головним підозрюваним у смерті ділової людини стає шурин Джейна, шахрай.","s"],
+      ["The Blood on His Hands","2010-10-07","Смерть молодого члена секти веде до розслідування податкових махінацій.","s"],
+      ["Red Carpet Treatment","2010-10-14","Звільненого з в'язниці застрелено в обличчя. Двоє підозрюваних звинувачують один одного.","s"],
+      ["The Red Ponies","2010-10-21","Вбито відомого жокея. Команда потрапляє на іподром із суворим власником.","s"],
+      ["Pink Chanel Suit","2010-10-28","Зникає онука судді, а її хлопця вбито в охоронюваному маєтку. Тіло ховає сімейний лікар.","s"],
+      ["Red Hot","2010-11-04","Вибух ледь не вбиває команду. Головним підозрюваним стає мільярдер, що любить ризик.","s"],
+      ["Ball of Fire","2010-11-11","Помстива жінка викрадає Джейна й тримає його на ланцюзі в хатині. Протистояння завершується пострілом.","s"],
+      ["Red Moon","2010-11-18","Астролога підозрюють у серії вбивств поліцейських, але Джейн викриває справжнього винного.","s"],
+      ["Jolly Red Elf","2010-12-09","Смерть Санта-Клауса веде до групи підтримки й товариства Сант. Знайдений слід стосується головної лінії.","a"],
+      ["Bloodsport","2011-01-06","Журналіста знаходять під ареною бойових мистецтв, а слідчий із центрального відділу придивляється до Рігсбі.","s"],
+      ["Bloodhounds","2011-01-20","До команди приєднується профайлер, щоб упіймати можливого серійного вбивцю. Жертв пов'язує несподіваний зв'язок.","s"],
+      ["Red Alert","2011-02-03","Вбивство режисера та захоплення заручників у мерії викривають начальника поліції, що підставив підозрюваного.","s"],
+      ["Blood for Blood","2011-02-10","Вбито ключового свідка. Відновлені спогади його доньки показують самозахист і замовлення від посадовця.","s"],
+      ["Red Gold","2011-02-17","Через вбивство золотошукача Лісбон отримує поранення. Хайтауер вперше виходить у поле поруч із Джейном.","s"],
+      ["Red Queen","2011-02-24","Вбивство професора відкриває нелегальну торгівлю зброєю.","s"],
+      ["Bloodstream","2011-03-10","Адміністратора лікарні вбито біля майданчика для гольфу. Джейн викриває анестезіолога, що крав препарати.","s"],
+      ["The Red Mile","2011-03-31","Викрадене тіло веде до вмираючого патологоанатома. Вбивцею виявляється свекруха потерпілого.","s"],
+      ["Every Rose Has Its Thorn","2011-04-07","Вбито главу сервісу знайомств. Джейн викриває вдову, чию історію підтверджувала секретарка.","s"],
+      ["Redacted","2011-04-28","Крадіжка та вбивство власника магазину ведуть до цінного килима з прихованим багатством.","s"],
+      ["Like a Redheaded Stepchild","2011-05-05","Заколото працівника виправної установи. Джейн знаходить довіреного в'язня, що таємно грабував ювелірні магазини.","s"],
+      ["Rhapsody in Red","2011-05-12","Скрипальку застрелено на автобусній зупинці. Джейн пускає плітку про роман, щоб виманити вбивцю.","s"],
+      ["Strawberries and Cream (Part I)","2011-05-19","Смерть смертника-підривника відкриває змову навколо клієнтської бази кредитної фірми. Починається фінал сезону.","a"],
+      ["Strawberries and Cream (Part II)","2011-05-19","Фінал сезону: розв'язка головної лінії серіалу.","a"]
+    ],
+    4: [
+      ["Scarlet Ribbons","2011-09-22","Після суду над Джейном команда шукає викрадену дівчину й виходить на жінку, що ховала її в таємній кімнаті.","s"],
+      ["Little Red Book","2011-09-29","Інструкторку спортзалу вбито важким предметом. Джейн змушує власницю зали виказати себе.","s"],
+      ["Pretty Red Balloon","2011-10-06","Викрадення хлопчика списують на маніяка. Джейн показує, що винен його зведений брат.","s"],
+      ["Ring Around the Rosie","2011-10-13","Убивство фотографа веде до хибного зізнання й небезпечного підозрюваного.","s"],
+      ["Blood and Sand","2011-10-20","Тіло підлітка на острові приводить до чоловіка, що видає себе за місцевого.","s"],
+      ["Where in the World Is Carmine O'Brien?","2011-10-27","Смерть начальника поліції переплітається зі справою брата Лісбон. Вбивцею виявляється син власника готелю.","s"],
+      ["Blinking Red Light","2011-11-03","Дівчат-підлітків убиває маніяк, що сам себе назвав. Справа змушує Джейна діяти.","s"],
+      ["Pink Tops","2011-11-17","Застрелено поліціянтку під прикриттям. Джейн викриває її найкращу подругу-колегу.","s"],
+      ["The Redshirt","2011-12-08","Бомба в авто, призначена для квотербека, вбиває його помічника. Джейн інсценує смерть спортсмена, щоб виманити вбивцю.","s"],
+      ["Fugue in Red","2011-12-15","Під час справи про смерть пожежника Джейн втрачає пам'ять і повертається до свого старого образу шахрая.","s"],
+      ["Always Bet on Red","2012-01-12","Адвоката вбито на його човні. Джейн читає підозрюваних і викриває ревниву колегу.","s"],
+      ["My Bloody Valentine","2012-01-19","Сина мафіозі застрелено в гарячій ванні. Зізнання вибиває хитрість Джейна.","s"],
+      ["Red Is the New Black","2012-02-02","Модельєра заколото в лофті. Убивцею виявляється модель, що хотіла сукню із золотих пір'їн.","s"],
+      ["At First Blush","2012-02-09","Власницю виноробні судять за вбивство, але Джейн доводить, що її підставив бізнес-партнер.","s"],
+      ["War of the Roses","2012-02-16","Знайдено мертвим молодіжного консультанта. Слід веде до директорки некомерційної організації та розтрат.","s"],
+      ["His Thoughts Were Red Thoughts","2012-02-23","Убито активіста проти сект. Джейн викриває декана, який передавав йому інформацію.","s"],
+      ["Cheap Burgundy","2012-03-08","Жінку вбито після онлайнової розмови про Шекспіра. Джейн розплутує брехню її начальника.","s"],
+      ["Ruddy Cheeks","2012-03-09","Ексгумують тіло хворого на рак. Команда знаходить медсестру, яка приховувала помилки в дослідженні ліків.","s"],
+      ["Pink Champagne on Ice","2012-03-29","Застрелено працівника казино. Слід веде до помічника фокусника, що організував пограбування.","s"],
+      ["Something's Rotten in Redmund","2012-04-05","Учителя забито до смерті. Джейн викриває приховані камери директора, а вбивцею виявляється вчитель драми.","s"],
+      ["Ruby Slippers","2012-04-26","Підлітка знаходять у палаючому авто. З'ясовується, що він інсценував власну смерть, щоб утекти від кривдників.","s"],
+      ["So Long, and Thanks for All the Red Snapper","2012-05-03","Убито серфера. Розслідування виводить на колишнього нареченого Лісбон.","s"],
+      ["Red Rover, Red Rover","2012-05-10","У замкненій скрині знаходять тіло. Джейн вдається до ризикованого кроку, щоб змусити злодія зізнатися.","s"],
+      ["The Crimson Hat","2012-05-17","Фінал сезону: Джейн розігрує зрив, щоб вийти на слід головного ворога.","a"]
+    ],
+    5: [
+      ["The Crimson Ticket","2012-09-30","Подвійне вбивство через виграшний лотерейний квиток. Квиток забрав поліціянт, що прибув на виклик.","s"],
+      ["Devil's Cherry","2012-10-07","Убито гранильника діамантів. Джейн, випадково отруївшись трав'яним настоєм, відновлює події.","s"],
+      ["Not One Red Cent","2012-10-14","Касира застрелено під час пограбування банку. Джейн знаходить співучасника всередині.","s"],
+      ["Blood Feud","2012-10-21","Вбивство розпалює війну банд. Керівник спортзалу, що хотів зіткнути угруповання, виявляється організатором.","s"],
+      ["Red Dawn","2012-10-28","Флешбек до перших днів Джейна в бюро: він змушує корумпованого поліціянта зізнатися у вбивстві сина судді.","s"],
+      ["Cherry Picked","2012-11-04","Смерть охоронця розкриває викрадення за помилкою. Джейн ловить підозрюваного й отримує слід.","s"],
+      ["If It Bleeds, It Leads","2012-11-11","Убито тележурналістку. Джейн викриває справжнього вбивцю прямо в ефірі.","s"],
+      ["Red Sails in the Sunset","2012-11-18","Джейн готує втечу з в'язниці, щоб здобути довіру Лорелей.","a"],
+      ["Black Cherry","2012-11-25","Вбивство ріелтора пов'язане з його старою бандою.","s"],
+      ["Panama Red","2012-12-09","Ботаніка вбито заради цінного насіння марихуани. Убивця: його наставник, але насіння вже підмінили.","s"],
+      ["Days of Wine and Roses","2013-01-06","Розслідується смерть моделі, поки Лісбон збирає справу проти Томмі Волкера.","s"],
+      ["Little Red Corvette","2013-01-13","Рештки геолога та дитина-свідок ведуть до спільників Волкера.","s"],
+      ["The Red Barn","2013-01-27","Потрійне вбивство 25-річної давності на фермі пов'язане з головною лінією. Джейн хитрістю виманює зізнання.","a"],
+      ["Red in Tooth and Claw","2013-02-17","У музеї гине аспірантка. Її вбив інший студент, що привласнив її відкриття про метеликів.","s"],
+      ["Red Lacquer Nail Polish","2013-03-03","Рештки спадкоємиці виявляються тілом зниклого ветерана. Вона інсценувала смерть, щоб уникнути звинувачень.","s"],
+      ["There Will Be Blood","2013-03-10","Лорелей виходить з-під контролю. Серія розвиває головну лінію.","a"],
+      ["Red, White and Blue","2013-03-17","Військового медика зарізано. Джейн ловить лікаря-наркоторговця, використавши хибний спогад свідка.","s"],
+      ["Behind the Red Curtain","2013-03-24","Акторку мюзиклу скинули з балкона. Вбивця: продюсер, що ховав свій обман.","s"],
+      ["Red Letter Day","2013-04-14","Смерть власника міста відкриває таємницю зведеної сестри. Убивця: його син.","s"],
+      ["Red Velvet Cupcakes","2013-04-21","Смерть жінки відкриває роман її чоловіка. Ван Пелт і Рігсбі йдуть під прикриттям у радіошоу про стосунки.","s"],
+      ["Red and Itchy","2013-04-28","З сейфа ЛаРоша пропадає коробка. Джейн викриває начальника комунікацій бюро, що найняв злодіїв.","s"],
+      ["Red John's Rules","2013-05-05","Фінал сезону: нове вбивство в стилі головного ворога Джейна.","a"]
+    ],
+    6: [
+      ["The Desert Rose","2013-09-29","Людина, зникла два роки тому, знайдена мертвою. Лісбон потрапляє в пастку.","a"],
+      ["Black-Winged Redbird","2013-10-06","Нові сліди після небезпечної події з Лісбон.","a"],
+      ["Wedding in Red","2013-10-13","Джейн залучає бюро до справи в Напі, поки Рігсбі та Ван Пелт готуються до весілля.","s"],
+      ["Red Listed","2013-10-20","Витік списку підозрюваних загрожує невинним. Команда виявляє змову в правоохоронних органах.","a"],
+      ["The Red Tattoo","2013-10-27","Приватну детективку, що прослуховувала бюро, смертельно поранено.","a"],
+      ["Fire and Brimstone","2013-11-10","Джейн перевіряє підозрюваних, а вибух біля його будинку ставить усе під загрозу.","a"],
+      ["The Great Red Dragon","2013-11-17","Джейн публічно називає ім'я, а ФБР закриває бюро.","a"],
+      ["Red John","2013-11-24","Кульмінація головної лінії серіалу.","a"],
+      ["My Blue Heaven","2013-12-01","Через два роки Джейн живе на острові й погоджується консультувати ФБР. Умови його «контракту» нічого не варті.","s"],
+      ["Green Thumb","2013-12-08","Джейн допомагає розкрити викрадення в Брукліні в обмін на свої умови.","s"],
+      ["White Lines","2014-01-05","Загибель агентів DEA у війні наркокартелів. Джейн розкриває справжню наркоторговку.","s"],
+      ["The Golden Hammer","2014-01-12","Убивство картографа відкриває продаж секретів. Загибель колишнього колеги по бюро показує масове прослуховування.","s"],
+      ["Black Helicopters","2014-03-09","Джейн під прикриттям у комуні шукає вбивцю прокурора США.","s"],
+      ["Grey Water","2014-03-16","На Рігсбі та Ван Пелт нападають удома. Джейн викриває друга фермера як вбивцю.","s"],
+      ["White as the Driven Snow","2014-03-23","Викрадають Грейс. Команда рятує її, а Рігсбі поранено.","s"],
+      ["Violets","2014-03-30","Операція, де Лісбон грає подругу Джейна, викриває крадіїв витворів мистецтва та вбивцю власника галереї.","s"],
+      ["Silver Wings of Time","2014-04-13","Команда відкриває стару справу, щоб знайти справжнього вбивцю до страти засудженого.","s"],
+      ["Forest Green","2014-04-20","Джейн під прикриттям у чоловічому клубі шукає вбивцю жінки.","s"],
+      ["Brown Eyed Girls","2014-04-27","Знайдена вмираюча жінка розкриває кільце торгівлі людьми.","s"],
+      ["Il Tavolo Bianco","2014-05-04","Інсценований арешт Джейна викриває підкуплену присяжну й торгівлю органами.","s"],
+      ["Black Hearts","2014-05-11","Джейн і Лісбон ловлять голову угруповання викрадачів.","s"],
+      ["Blue Bird","2014-05-18","Фінал сезону: Джейн відкриває холодну справу, щоб Лісбон не поїхала, і вбивць упіймано.","s"]
+    ],
+    7: [
+      ["Nothing But Blue Skies","2014-11-30","У боулінгу вбито агента під прикриттям. Джейн ловить власника через інсценований план.","s"],
+      ["The Greybar Hotel","2014-12-07","Злодії обкрадають благодійний гала. Лісбон іде під прикриттям у в'язницю, щоб вийти на збройну мережу.","s"],
+      ["Orange Blossom Ice Cream","2014-12-14","У Бейруті Джейн запам'ятовує коди контрабандиста підроблених паспортних чипів.","s"],
+      ["Black Market","2014-12-21","Джейн хворіє, і Лісбон сама веде справу про крадіжку коштовностей та вбивство, видаючи себе за ясновидицю.","s"],
+      ["The Silver Briefcase","2014-12-28","Убито дружину полковника. Джейн блефує порожнім портфелем і вибиває зізнання.","s"],
+      ["Green Light","2015-01-07","Рейд DEA нічого не знаходить. Джейн викриває крота, що злив інформацію картелю.","s"],
+      ["Little Yellow House","2015-01-14","Адвоката вбито під час гри в покер. Джейн і Лісбон викривають друга потерпілого.","s"],
+      ["The Whites of His Eyes","2015-01-21","Кілер, найнятий через відеогру, вбиває свідка. ФБР зриває замах на другого свідка.","s"],
+      ["Copper Bullet","2015-01-28","Колишній начальник Ебботта підставляє його. Команда ловить зловмисника за допомогою операції.","s"],
+      ["Nothing Gold Can Stay","2015-02-04","Пограбування броньованого авто завершується захопленням заручників. Джейн розколює двох підозрюваних.","s"],
+      ["Byzantium","2015-02-11","Самозваний ясновидець веде агентів до закопаних тіл, але сам стає підозрюваним.","p"],
+      ["Brown Shag Carpet","2015-02-18","Джейн вдає ясновидця, щоб виманити серійного вбивцю.","s"],
+      ["White Orchids","2015-02-18","Фінал серіалу: переслідування вбивці, що вижив, і весілля на озері.","s"]
+    ]
+  };
+  var STAMP = { s: "Розкрито", a: "Головна лінія", p: "Частково" };
+  var CBI_LAST = 124;
+
+  var all = [], n = 0;
+  Object.keys(DATA).forEach(function (sn) {
+    DATA[sn].forEach(function (e, i) {
+      n += 1;
+      all.push({ n: n, season: +sn, ep: i + 1, title: e[0], date: e[1], desc: e[2], st: e[3], fbi: n > CBI_LAST });
+    });
+  });
+
+  var root = document.getElementById("cases");
+  var chips = document.getElementById("seasonChips");
+  var count = document.getElementById("count");
+  var input = document.getElementById("q");
+  var season = "1", query = "";
+
+  function fmtDate(iso) {
+    try { return new Date(iso + "T12:00:00").toLocaleDateString("uk-UA", { day: "numeric", month: "long", year: "numeric" }); }
+    catch (e) { return iso; }
+  }
+  function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+
+  function card(c) {
+    var ag = c.fbi ? "fbi" : "cbi";
+    var name = c.fbi ? "ФБР" : "CBI";
+    var no = (c.fbi ? "FBI-" : "CBI-") + String(c.n).padStart(3, "0");
+    return '<article class="doc ' + ag + '">' +
+      '<div class="doc-head"><span class="agency">' + name + '</span><span>№ ' + no + '</span></div>' +
+      '<div class="doc-body"><h3>' + esc(c.title) + '</h3>' +
+      '<dl class="fields"><dt>Серія</dt><dd>Сезон ' + c.season + ', серія ' + c.ep + '</dd>' +
+      '<dt>Ефір</dt><dd>' + fmtDate(c.date) + '</dd>' +
+      '<dt>Консультант</dt><dd>Патрік Джейн</dd></dl>' +
+      '<p class="desc">' + esc(c.desc) + '</p></div>' +
+      '<div class="doc-foot"><span class="stamp ' + (c.st === "s" ? "solved" : c.st === "a" ? "arc" : "part") + '">' + STAMP[c.st] + '</span></div>' +
+      '</article>';
+  }
+
+  function render() {
+    var q = query.trim().toLowerCase();
+    var list = all.filter(function (c) {
+      if (season !== "all" && String(c.season) !== season) return false;
+      if (!q) return true;
+      return c.title.toLowerCase().indexOf(q) > -1 || c.desc.toLowerCase().indexOf(q) > -1;
+    });
+    root.innerHTML = list.length ? list.map(card).join("") : '<p class="empty">Нічого не знайдено. Спробуйте інше слово або оберіть інший сезон.</p>';
+    count.textContent = "Показано " + list.length + " із " + all.length;
+  }
+
+  function chip(val, label) {
+    var b = document.createElement("button");
+    b.type = "button";
+    b.textContent = label;
+    b.setAttribute("data-s", val);
+    b.setAttribute("aria-pressed", val === season ? "true" : "false");
+    b.addEventListener("click", function () {
+      season = val;
+      chips.querySelectorAll("button").forEach(function (x) { x.setAttribute("aria-pressed", x.getAttribute("data-s") === season ? "true" : "false"); });
+      render();
+    });
+    chips.appendChild(b);
+  }
+  for (var s = 1; s <= 7; s++) chip(String(s), "Сезон " + s);
+  chip("all", "Усі");
+
+  input.addEventListener("input", function () { query = input.value; render(); });
+  render();
+})();
+</script>
 </body>
 </html>
