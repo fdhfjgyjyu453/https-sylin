@@ -58,6 +58,7 @@ p { margin: 0; }
 a { color: var(--accent); }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 
+/* ЧЕРВОНИЙ ТЕКСТ ПРИ ЗГАДЦІ ЧЕРВОНОГО ДЖОНА */
 .red-john {
   color: var(--alert) !important;
   font-weight: 700;
@@ -72,7 +73,7 @@ a { color: var(--accent); }
   color: var(--muted);
 }
 
-/* Верхня стрічка */
+/* Верхня стрічка справи */
 .bar {
   display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: space-between;
   padding-block: 20px; border-bottom: 1px solid var(--line);
@@ -121,7 +122,7 @@ section { padding-block: 60px; border-top: 1px solid var(--line); }
 .sec-head h2 { font-size: clamp(2.1rem, 5vw, 3.2rem); line-height: 1.1; }
 .sec-head p { max-width: 52ch; color: var(--muted); font-size: 1.05rem; }
 
-/* Команда розслідувачів */
+/* КОМАНДА РОЗСЛІДУВАНЬ */
 .team-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -211,7 +212,7 @@ details .body strong { color: var(--accent); font-weight: 600; }
 .arc .text { color: var(--muted); display: grid; gap: 14px; font-size: 1.05rem; }
 .note { font-family: var(--font-mono); font-size: 13px; letter-spacing: 0.06em; color: var(--muted); border: 1px dashed var(--line); padding: 12px 14px; }
 
-/* ЧАШКА ЧАЮ З 3D РОЗВЕРТАННЯМ */
+/* ЧАШКА ЧАЮ З 3D РОЗВЕРТАННЯМ НАВКОЛО ОСІ */
 .tea { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 32px 56px; align-items: center; }
 .cup {
   display: grid;
@@ -219,8 +220,10 @@ details .body strong { color: var(--accent); font-weight: 600; }
   background: var(--surface);
   border: 1px solid var(--line);
   padding: 40px;
-  perspective: 800px;
+  perspective: 800px; /* Створює 3D перспективу */
 }
+
+/* 3D обертання чашки по своїй осі (Y-axis) */
 .cup svg {
   width: min(100%, 250px);
   height: auto;
@@ -229,12 +232,16 @@ details .body strong { color: var(--accent); font-weight: 600; }
   animation: spinCup3D 9s linear infinite;
 }
 .running .cup svg {
-  animation-duration: 3.5s;
+  animation-duration: 3.5s; /* Швидше обертання при запущеному таймері */
 }
 
 @keyframes spinCup3D {
-  0% { transform: rotateY(0deg); }
-  100% { transform: rotateY(360deg); }
+  0% {
+    transform: rotateY(0deg);
+  }
+  100% {
+    transform: rotateY(360deg);
+  }
 }
 
 .cup .steam { stroke: var(--muted); fill: none; stroke-width: 3; stroke-linecap: round; opacity: 0.7; }
@@ -242,9 +249,8 @@ details .body strong { color: var(--accent); font-weight: 600; }
 .running .steam.s2 { animation-delay: 0.9s; }
 .running .steam.s3 { animation-delay: 1.8s; }
 @keyframes steam { 0% { transform: translateY(6px); opacity: 0; } 40% { opacity: 0.8; } 100% { transform: translateY(-10px); opacity: 0; } }
-
-.clock { font-family: var(--font-mono); font-size: clamp(3.2rem, 12vw, 5.8rem); font-weight: 500; font-variant-numeric: tabular-nums; line-height: 1; margin-block: 10px 14px; }
-.status { min-height: 1.4em; color: var(--muted); margin-bottom: 16px; font-size: 16px; }
+.clock { font-family: var(--font-mono); font-size: clamp(3.2rem, 12vw, 5.8rem); font-weight: 500; font-variant-numeric: tabular-nums; line-height: 1; margin-block: 10px 20px; }
+.status { min-height: 1.6em; color: var(--muted); margin-bottom: 20px; }
 .controls { display: flex; flex-wrap: wrap; gap: 10px; }
 button {
   font: inherit; font-size: 16px; font-weight: 500; cursor: pointer; color: var(--fg);
@@ -281,7 +287,7 @@ button[aria-pressed="true"] { border-color: var(--accent); background: var(--acc
 .stamp.part { color: var(--muted); }
 .empty { color: var(--muted); padding-block: 24px; }
 
-/* Футер */
+/* ФУТЕР БЕЗ ДИСКЛЕЙМЕРА ТА ДАТИ */
 footer {
   padding-block: 40px 60px;
   border-top: 1px solid var(--line);
@@ -323,8 +329,10 @@ footer {
       <div>
         <p class="label">Детективний серіал · CBS</p>
         <h1>Менталіст</h1>
+        <!-- ЗМІНЕНИЙ СЛОГАН -->
         <p class="lead">Він бачить, що ви приховуєте, ще до того, як ви взагалі встигли вимовити перше слово.</p>
         
+        <!-- 10 РЕЧЕНЬ ПРО ГОЛОВНОГО ГЕРОЯ (ПАТРІКА ДЖЕЙНА) -->
         <div class="intro">
           <p>1. Патрік Джейн — неперевершений консультант Каліфорнійського бюро розслідувань, а пізніше й Федерального бюро розслідувань.</p>
           <p>2. У минулому він здобув гучну популярність на телебаченні під виглядом медіума, заробляючи великі статки на довірі людей фальшивими «надприродними» силами.</p>
@@ -339,7 +347,7 @@ footer {
         </div>
       </div>
 
-      <aside class="dossier">
+      <aside class="dossier" aria-label="Досьє серіалу">
         <p class="label">Офіційне досьє</p>
         <dl>
           <div class="row"><dt>Автор</dt><dd>Бруно Геллер</dd></div>
@@ -353,7 +361,7 @@ footer {
       </aside>
     </div>
 
-    <!-- КОМАНДА РОЗСЛІДУВАНЬ -->
+    <!-- ПЕРЕЙМЕНОВАНИЙ РОЗДІЛ З ДОДАНИМИ ПЕРСОНАЖАМИ ФБР -->
     <section id="team">
       <div class="sec-head">
         <h2>Оперативна команда розслідувань: CBI та ФБР</h2>
@@ -361,6 +369,7 @@ footer {
       </div>
 
       <div class="team-grid">
+        <!-- Патрік Джейн -->
         <article class="person-card lead-card">
           <span class="card-tag">Особливий статус</span>
           <h3>Патрік Джейн</h3>
@@ -369,6 +378,7 @@ footer {
           <p class="about">Колишній фальшивий екстрасенс, що став незамінним аналітиком. Працює поза правилами, розкриває справи через витончені психологічні пастки.</p>
         </article>
 
+        <!-- Тереза Лісбон -->
         <article class="person-card">
           <span class="card-tag">Керівник відділу / Спецагентка</span>
           <h3>Тереза Лісбон</h3>
@@ -377,6 +387,7 @@ footer {
           <p class="about">Залізний моральний орієнтир групи. Єдина людина, здатна контролювати хаотичні витівки Патріка і захищати його від федерального переслідування.</p>
         </article>
 
+        <!-- Кімбол Чо -->
         <article class="person-card">
           <span class="card-tag">Оперативна група</span>
           <h3>Кімбол Чо</h3>
@@ -385,6 +396,7 @@ footer {
           <p class="about">Непохитний професіонал із минулим у вуличній банді. Його неможливо налякати чи збити з пантелику, а сухий сарказм розбиває будь-яку брехню.</p>
         </article>
 
+        <!-- Вейн Рігсбі -->
         <article class="person-card">
           <span class="card-tag">Команда CBI</span>
           <h3>Вейн Рігсбі</h3>
@@ -393,6 +405,7 @@ footer {
           <p class="about">Фізична опора команди та фахівець із підпалів. Відданий товариш, який згодом заснував власну детективну агенцію разом із дружиною.</p>
         </article>
 
+        <!-- Грейс Ван Пелт -->
         <article class="person-card">
           <span class="card-tag">Команда CBI</span>
           <h3>Грейс Ван Пелт</h3>
@@ -401,6 +414,7 @@ footer {
           <p class="about">Експертка з пошуку прихованої інформації в мережі. Її початкова наївність і віра в таємниче переросли у залізну оперативну стійкість.</p>
         </article>
 
+        <!-- Денніс Ебботт (ФБР) -->
         <article class="person-card fbi-card">
           <span class="card-tag fbi-tag">ФБР · Керівник відділу</span>
           <h3>Денніс Ебботт</h3>
@@ -409,6 +423,7 @@ footer {
           <p class="about">Спочатку саме він закривав CBI та полював на Джейна. Згодом оцінив його геніальність, надав свободу дій у ФБР і став для нього надійним другом.</p>
         </article>
 
+        <!-- Кім Фішер (ФБР) -->
         <article class="person-card fbi-card">
           <span class="card-tag fbi-tag">ФБР · Старша агентка</span>
           <h3>Кім Фішер</h3>
@@ -417,6 +432,7 @@ footer {
           <p class="about">Особисто розшукала Джейна під час його добровільного вигнання на острові. Прагматична агентка, яка контролювала інтеграцію Патріка до лав ФБР.</p>
         </article>
 
+        <!-- Джейсон Вайлі (ФБР) -->
         <article class="person-card fbi-card">
           <span class="card-tag fbi-tag">ФБР · Цифрові технології</span>
           <h3>Джейсон Вайлі</h3>
@@ -425,6 +441,7 @@ footer {
           <p class="about">Молодий технологічний вундеркінд. Щиро захоплювався трюками Джейна і міг миттєво добути будь-яке цифрове досьє чи відстежити телефон.</p>
         </article>
 
+        <!-- Мішель Вега (ФБР) -->
         <article class="person-card fbi-card">
           <span class="card-tag fbi-tag">ФБР · Польовий агент</span>
           <h3>Мішель Вега</h3>
@@ -435,13 +452,14 @@ footer {
       </div>
     </section>
 
-    <!-- МЕТОДИ -->
+    <!-- РОЗШИРЕНІ МЕТОДИ (>5 РЕЧЕНЬ + ПРИКЛАДИ СЕРІЙ) -->
     <section id="methods">
       <div class="sec-head">
         <h2>Методи Патріка Джейна</h2>
         <p>Детальний розбір технік маніпуляції та спостереження з конкретними прикладами епізодів із серіалу.</p>
       </div>
       <div class="methods">
+        <!-- Метод 1 -->
         <details open>
           <summary>1. Холодне читання та провокація реакцій</summary>
           <div class="body">
@@ -450,6 +468,7 @@ footer {
           </div>
         </details>
 
+        <!-- Метод 2 -->
         <details>
           <summary>2. Спостережливість до деталей та мікровиразів</summary>
           <div class="body">
@@ -458,6 +477,7 @@ footer {
           </div>
         </details>
 
+        <!-- Метод 3 -->
         <details>
           <summary>3. Гіпнотичний транс і психологічне навіювання</summary>
           <div class="body">
@@ -466,6 +486,7 @@ footer {
           </div>
         </details>
 
+        <!-- Метод 4 -->
         <details>
           <summary>4. Палац пам'яті (мнемонічна архітектура)</summary>
           <div class="body">
@@ -476,7 +497,7 @@ footer {
       </div>
     </section>
 
-    <!-- ПРОТИСТОЯННЯ -->
+    <!-- Секція протистояння -->
     <section id="arc">
       <div class="sec-head">
         <h2>Протистояння всього життя</h2>
@@ -490,29 +511,28 @@ footer {
       </div>
     </section>
 
-    <!-- АРХІВ СПРАВ -->
     <section id="cases-section">
       <div class="sec-head">
         <h2>Архів справ</h2>
-        <p>Повний реєстр усіх 151 серій телесеріалу.</p>
+        <p>Повний реєстр усіх 151 серій телесеріалу з фільтрацією за сезонами та ключовими словами.</p>
       </div>
       <div class="filters">
-        <input id="q" class="search" type="search" placeholder="Пошук справи..." autocomplete="off">
-        <div class="seasons" id="seasonChips"></div>
+        <input id="q" class="search" type="search" placeholder="Пошук справи за назвою або сюжетом" aria-label="Пошук справи" autocomplete="off">
+        <div class="seasons" id="seasonChips" role="group" aria-label="Сезон"></div>
       </div>
-      <p class="label count" id="count"></p>
+      <p class="label count" id="count" aria-live="polite"></p>
       <div class="cases" id="cases"></div>
     </section>
 
-    <!-- ЧАШКА ЧАЮ -->
+    <!-- СЕКЦІЯ ЧАЮ З 3D РОЗВЕРТАННЯМ ЧАШКИ ПО ОСІ -->
     <section id="tea">
       <div class="sec-head">
         <h2>Час на чай</h2>
-        <p>Чай для Джейна — це ритуал концентрації та роздумів.</p>
+        <p>Чай для Джейна — це ритуал концентрації. Оберіть сорт і запустіть процес заварювання.</p>
       </div>
       <div class="tea" id="teaBlock">
         <div class="cup">
-          <svg viewBox="0 0 260 220">
+          <svg viewBox="0 0 260 220" role="img" aria-label="Чашка чаю, яка розвертається навколо своєї осі у 3D">
             <path class="steam s1" d="M90 70 C80 55 100 45 90 28"/>
             <path class="steam s2" d="M130 72 C120 55 140 45 130 24"/>
             <path class="steam s3" d="M170 70 C160 55 180 45 170 28"/>
@@ -524,9 +544,9 @@ footer {
         </div>
         <div>
           <p class="label">Таймер заварювання</p>
-          <div class="clock" id="clock">03:00</div>
-          <p class="status" id="status"></p>
-          <div class="controls" id="presets">
+          <div class="clock" id="clock" role="timer" aria-live="off">03:00</div>
+          <p class="status" id="status" aria-live="polite">Оберіть час і натисніть «Заварити».</p>
+          <div class="controls" id="presets" role="group" aria-label="Час заварювання">
             <button type="button" data-sec="120" aria-pressed="false">2 хв · зелений</button>
             <button type="button" data-sec="180" aria-pressed="true">3 хв · чорний</button>
             <button type="button" data-sec="300" aria-pressed="false">5 хв · трав'яний</button>
@@ -540,7 +560,7 @@ footer {
     </section>
   </main>
 
-  <!-- ФУТЕР БЕЗ ДИСКЛЕЙМЕРА -->
+  <!-- ОЧИЩЕНИЙ ФУТЕР БЕЗ ДИСКЛЕЙМЕРІВ ТА РОКІВ -->
   <footer>
     <div class="author-credit">
       Сторінку створив: <strong>Силін Максим Максимович</strong>
@@ -587,7 +607,7 @@ footer {
     endAt = Date.now() + left * 1000;
     block.classList.add("running");
     startBtn.textContent = "Пауза";
-    status.textContent = "Настоюється...";
+    status.textContent = "Настоюється. Не поспішайте.";
     timer = setInterval(tick, 250);
   }
   function reset() {
@@ -595,7 +615,7 @@ footer {
     left = total;
     render();
     startBtn.textContent = "Заварити";
-    status.textContent = "";
+    status.textContent = "Оберіть час і натисніть «Заварити».";
   }
 
   startBtn.addEventListener("click", start);
@@ -804,6 +824,7 @@ footer {
   }
   function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
 
+  // Підсвітка згадок Червоного Джона в описах
   function highlightRedJohn(txt) {
     return txt.replace(/(Червон(?:ий|ого|ому|им|ім|ому))\s+(Джон(?:а|у|ом|і)?)/gi, '<span class="red-john">$1 $2</span>');
   }
@@ -830,7 +851,7 @@ footer {
       if (!q) return true;
       return c.title.toLowerCase().indexOf(q) > -1 || c.desc.toLowerCase().indexOf(q) > -1;
     });
-    root.innerHTML = list.length ? list.map(card).join("") : '<p class="empty">Нічого не знайдено.</p>';
+    root.innerHTML = list.length ? list.map(card).join("") : '<p class="empty">Нічого не знайдено. Спробуйте інше слово або оберіть інший сезон.</p>';
     count.textContent = "Показано " + list.length + " із " + all.length;
   }
 
